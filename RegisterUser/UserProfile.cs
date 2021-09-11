@@ -17,5 +17,20 @@ namespace RegisterUser
         UserProfile() { }
         public string FirstName { get; set; }
         public string LastName { get; set; }
+        public Guid ImageGuid { get; set; }
+
+        public static explicit operator UserProfile(TableResult v)
+        {
+            DynamicTableEntity entity = (DynamicTableEntity)v.Result;
+            UserProfile userProfile = new UserProfile();
+            userProfile.PartitionKey = entity.PartitionKey;
+            userProfile.RowKey = entity.RowKey;
+            userProfile.Timestamp = entity.Timestamp;
+            userProfile.ETag = entity.ETag;
+            userProfile.FirstName = entity.Properties["FirstName"].StringValue;
+            userProfile.LastName = entity.Properties["LastName"].StringValue;
+
+            return userProfile;
+        }
     }
 }
